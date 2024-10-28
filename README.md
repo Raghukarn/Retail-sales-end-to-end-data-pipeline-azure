@@ -24,7 +24,7 @@ This project develops a scalable and automated data pipeline for transforming an
 ## Data Pipeline
 - **Bronze Layer**: Raw data ingestion from SQL Server.
 - **Silver Layer**: Cleansed and structured data in Databricks.
-- **Gold Layer**: Aggregated data for analysis and reporting.
+- **Gold Layer**: Aggregated data for analysis and reporting. Enabled schema evolution tables.
 
 ## CI/CD Pipeline
 The CI/CD pipeline automates deployment using version-controlled configurations. This ensures that each change is tested and deployed seamlessly in the Azure environment.
