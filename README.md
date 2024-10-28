@@ -9,6 +9,8 @@ This project develops a scalable and automated data pipeline for transforming an
 - **Data Loading**: Transformed data is loaded into Azure Synapse Analytics.
 - **Reporting**: Data from Synapse is visualized in Power BI dashboards.
 - **CI/CD**: End-to-end deployment is automated with CI/CD pipeline in Azure DevOps.
+![image](https://github.com/user-attachments/assets/11a8536b-ee0d-4b28-b6aa-be3c670b5ffa)
+
 
 ## Technologies Used
 - **Azure Data Factory**
@@ -17,13 +19,7 @@ This project develops a scalable and automated data pipeline for transforming an
 - **Azure Synapse Analytics**
 - **Power BI**
 - **CI/CD**: Automated with Azure DevOps.
-
-## Setup Instructions
-1. Clone the repository.
-2. Set up an Azure environment with the required services (Data Factory, Data Lake Gen2, Databricks, Synapse).
-3. Configure Azure Data Factory pipeline (see `/data-pipeline` folder).
-4. Deploy CI/CD pipeline configuration for automated deployment (see `/ci-cd` folder).
-
+- 
 ## Data Pipeline
 - **Bronze Layer**: Raw data ingestion from SQL Server.
 - **Silver Layer**: Cleansed and structured data in Databricks.
