@@ -1,0 +1,55 @@
+parameters:
+  - name: stageId
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+  - name: env
+    type: string
+  - name: environmentName
+    type: string
+  - name: resourceGroupName
+    type: string
+  - name: serviceConnection
+    type: string
+  - name: notebooksPath
+    type: string                
+
+stages:
+  - stage: "${{ parameters.stageId}}"    
+    displayName: "Deploying to [${{upper(parameters.env)}}] Environment"
+    dependsOn: ${{ parameters.dependsOn}}
+    jobs:
+      - deployment: Deploy
+        displayName: "Deploying Databricks Notebooks"
+        environment: ${{parameters.environmentName}}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: ${{parameters.serviceConnection}}
+                    scriptType: "pscore" # Change to ps for Windows PowerShell
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az config set extension.use_dynamic_install=yes_without_prompt
+
+                      # Install Databricks extension if not already installed
+                      # az extension add --name databricks
+
+                      # Optional: Set extension dynamic install preview to avoid warnings
+                      # az config set extension.dynamic_install_allow_preview=true
+
+                      $databricksWorkspace = (az resource list --resource-group ${{parameters.resourceGroupName}} --query "[?type=='Microsoft.Databricks/workspaces']" | ConvertFrom-Json)[0]
+                      $databricksWorkspaceInfo = (az databricks workspace show --ids $databricksWorkspace.id | ConvertFrom-Json)
+
+                      # Debugging output (optional)
+                      Write-Host "Databricks Workspace Info: $databricksWorkspaceInfo"
+
+                      $bearerToken = & "$(Build.Repository.LocalPath)/CICD/scripts/DatabricksToken.ps1" -databricksWorkspaceResourceId $($databricksWorkspaceInfo.Id) -databricksWorkspaceUrl $($databricksWorkspaceInfo.workspaceUrl)
+
+                      Install-Module -Name azure.databricks.cicd.tools -Force -Scope CurrentUser
+                      Import-Module -Name azure.databricks.cicd.tools
+                      Import-DatabricksFolder -BearerToken $bearerToken -Region $databricksWorkspaceInfo.location -LocalPath $(Build.Repository.LocalPath)/${{parameters.notebooksPath}} -DatabricksPath '/live' -Clean
