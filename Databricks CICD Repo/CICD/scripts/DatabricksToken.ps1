@@ -7,7 +7,7 @@ param
 
 # The Azure Databricks Management API resource (not the service principal ID)
 # $azureDatabricksResource = 'https://databricks.azure.net/'
-$azureDatabricksPrincipalId = '1834184d-7b40-47f3-9bc6-90665ecd5c23' # 'd999aa23-b2e1-4766-aadc-2e54945fc887'
+$azureDatabricksPrincipalId = '<service-principal-id>'
 
 $headers = @{}
 $headers["Authorization"] = "Bearer $((az account get-access-token --resource $azureDatabricksPrincipalId | ConvertFrom-Json).accessToken)"
